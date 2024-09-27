@@ -1,114 +1,86 @@
-1. Test Strategy
-Objetivo del Test:
-El propósito del test es asegurar que el juego "Adivina tu número" se comporta según lo especificado en las restricciones del caso, manejando entradas no válidas, mostrando los mensajes correctos, y finalizando el juego en las condiciones estipuladas (adivinanza correcta o número máximo de intentos).
+# Estrategia de Pruebas para el Juego "Adivina tu Número"
 
-Alcance:
-El test abarca las siguientes funcionalidades:
+## Objetivo
+El objetivo de este documento es detallar la estrategia de pruebas implementada para el juego "Adivina tu Número", así como los cambios realizados en el código para cumplir con los requisitos especificados.
 
-Validación de que el número ingresado es un entero.
-Verificación de mensajes de éxito, error y fin de juego en los colores adecuados.
-Control adecuado de los intentos (máximo de 10).
-Comportamiento del juego cuando el número ingresado es mayor o menor al número aleatorio.
-Criterios de aceptación:
-Validación del input:
+## Estrategia de Pruebas
 
-Si el jugador ingresa un número no entero, se debe mostrar una alerta sin contar el intento.
-El juego debe continuar con el siguiente intento sin registrar un incremento.
-Mensajes:
+### Casos de Prueba
 
-Si el jugador ingresa un número mayor al número a adivinar, el mensaje debe ser: "Incorrecto! El número es mayor!" en color negro.
-Si el número es menor, el mensaje debe ser: "Incorrecto! El número es menor!" en color negro.
-Si el jugador adivina el número, se debe mostrar: "Felicitaciones! adivinaste el número!" en color verde.
-Si el jugador no adivina después de 10 intentos, el mensaje debe ser: "!!!Pérdistes!!!" en color rojo.
-Control de intentos:
+1. **Validación de entrada no numérica**
+   - **Descripción**: Ingresar un valor no numérico y verificar que se muestre una alerta.
+   - **Resultado esperado**: Se debe mostrar un mensaje de alerta que indique que se debe ingresar un número entero y no se debe incrementar el contador de intentos.
 
-El número máximo de intentos es 10. Si se supera esta cantidad sin adivinar, el juego debe terminar.
-Al adivinar antes de los 10 intentos, el juego debe finalizar y mostrar un mensaje de victoria.
-Se debe habilitar un botón para reiniciar el juego una vez terminado.
-Criterios de éxito del test:
-El juego muestra las alertas correctas para entradas no válidas sin contar el intento.
-Los mensajes de error, victoria y derrota se muestran correctamente con el color de fondo adecuado.
-El número de intentos se controla y no supera el límite de 10.
-El juego permite reiniciar de manera correcta tras finalizar.
-Tipos de pruebas:
-Pruebas de validación de entrada:
+2. **Número mayor que el número aleatorio**
+   - **Descripción**: Ingresar un número mayor que el número aleatorio.
+   - **Resultado esperado**: Se debe mostrar el mensaje "Incorrecto! El número es menor!" y el color de fondo debe ser negro.
 
-Caso 1: Ingresar un número entero (válido).
-Caso 2: Ingresar un valor no entero (cadena de texto, decimal, etc.).
-Caso 3: Ingresar un valor vacío o no numérico.
-Pruebas de mensajes y resultados:
+3. **Número menor que el número aleatorio**
+   - **Descripción**: Ingresar un número menor que el número aleatorio.
+   - **Resultado esperado**: Se debe mostrar el mensaje "Incorrecto! El número es mayor!" y el color de fondo debe ser negro.
 
-Caso 1: Ingresar un número mayor que el número a adivinar (debe mostrar "Incorrecto! El número es mayor!").
-Caso 2: Ingresar un número menor que el número a adivinar (debe mostrar "Incorrecto! El número es menor!").
-Caso 3: Adivinar el número antes del décimo intento (debe mostrar "Felicitaciones! adivinaste el número!" y finalizar).
-Caso 4: No adivinar el número tras 10 intentos (debe mostrar "!!!Pérdistes!!!" y finalizar).
-Pruebas de funcionalidad general:
+4. **Adivinanza correcta**
+   - **Descripción**: Ingresar el número aleatorio.
+   - **Resultado esperado**: Se debe mostrar el mensaje "Felicitaciones! adivinaste el número!" y el color de fondo debe ser verde.
 
-Caso 1: Adivinar el número en menos de 10 intentos.
-Caso 2: Agotar todos los intentos sin adivinar.
-Caso 3: Verificar que se puede reiniciar el juego correctamente tras terminar.
-2. Detalle de los Cambios Realizados
-Validación del input como entero:
+5. **Número de intentos excedido**
+   - **Descripción**: Realizar 10 intentos sin adivinar el número.
+   - **Resultado esperado**: Se debe mostrar el mensaje "!!!Pérdistes!!!" y el color de fondo debe ser rojo.
 
-Problema: El código original no validaba si el número ingresado era un entero.
-Solución: Se agregó una verificación usando Number.isInteger() para asegurarse de que el valor ingresado sea un entero, y una alerta para manejar los casos donde el jugador ingrese un valor inválido. Además, se previene el incremento del contador de intentos si la entrada es inválida:
-javascript
-Copiar código
-if (isNaN(userGuess) || !Number.isInteger(userGuess)) {
-  alert('Por favor, ingresa un número entero.');
-  guessField.value = '';
-  guessField.focus();
-  return;
-}
-Generación correcta del número aleatorio:
+6. **Reinicio del juego**
+   - **Descripción**: Hacer clic en el botón para reiniciar el juego después de finalizar.
+   - **Resultado esperado**: El juego debe reiniciarse y permitir una nueva serie de intentos.
 
-Problema: El código original generaba un número aleatorio incorrecto (0 a 1).
-Solución: Se corrigió la generación de números aleatorios para que sean enteros entre 1 y 100 usando Math.floor(Math.random() * 100) + 1.
-Mensajes de retroalimentación y colores:
+## Cambios Realizados en el Código
 
-Problema: Los mensajes de error, victoria y derrota no tenían los textos ni colores adecuados.
-Solución: Se implementaron los mensajes correctos y se ajustaron los colores:
-Mensaje de victoria: "Felicitaciones! adivinaste el número!" en color verde.
-Mensaje de derrota: "!!!Pérdistes!!!" en color rojo.
-Mensajes de error cuando el número es mayor o menor: "Incorrecto! El número es mayor/menor!" en color negro.
-javascript
-Copiar código
-lastResult.textContent = 'Felicitaciones! adivinaste el número!';
-lastResult.style.backgroundColor = 'green';
-...
-lastResult.textContent = '!!!Pérdistes!!!';
-lastResult.style.backgroundColor = 'red';
-Corrección de la cantidad de intentos:
+1. **Validación de Entrada**
+   - Se agregó una validación para comprobar si el valor ingresado por el usuario es un número entero.
+   - Se utilizó `isNaN()` y `Number.isInteger()` para verificar la validez de la entrada.
+   - **Código**:
+     ```javascript
+     if (isNaN(userGuess) || !Number.isInteger(userGuess)) {
+       alert('Por favor, ingresa un número entero.');
+       guessField.value = '';
+       guessField.focus();
+       return;
+     }
+     ```
 
-Problema: El código original permitía 5 intentos en lugar de los 10 requeridos.
-Solución: Se cambió la constante ATTEMPS a ATTEMPTS = 10 para ajustar el número máximo de intentos:
-javascript
-Copiar código
-const ATTEMPTS = 10;
-Corrección de eventos y métodos:
+2. **Manejo de Mensajes de Retroalimentación**
+   - Se ajustaron los mensajes de retroalimentación para mostrar el texto correcto basado en la entrada del usuario.
+   - Se estableció el color de fondo correspondiente para los mensajes de error (negro), victoria (verde) y pérdida (rojo).
+   - **Código**:
+     ```javascript
+     lastResult.textContent = 'Incorrecto!';
+     lastResult.style.backgroundColor = 'black'; // Para respuestas incorrectas
+     ```
 
-Problema: Algunos eventos estaban mal escritos (addeventListener).
-Solución: Se corrigió la sintaxis de los eventos a addEventListener:
-javascript
-Copiar código
-guessSubmit.addEventListener('click', checkGuess);
-Reinicio del juego:
+3. **Corrección del Número Aleatorio**
+   - Se corrigió la lógica para generar un número aleatorio entre 1 y 100 utilizando `Math.floor(Math.random() * 100) + 1`.
+   - **Código**:
+     ```javascript
+     let randomNumber = Math.floor(Math.random() * 100) + 1; // Número aleatorio entre 1 y 100
+     ```
 
-Problema: El reinicio del juego no funcionaba correctamente y no se generaba un nuevo número.
-Solución: Se implementó correctamente la lógica para reiniciar el juego, habilitando los campos y generando un nuevo número aleatorio:
-javascript
-Copiar código
-function resetGame() {
-  guessCount = 1;
-  const resetParas = document.querySelectorAll('.resultParas p');
-  for (let i = 0; i < resetParas.length; i++) {
-    resetParas[i].textContent = '';
-  }
-  resetButton.parentNode.removeChild(resetButton);
-  guessField.disabled = false;
-  guessSubmit.disabled = false;
-  guessField.value = '';
-  guessField.focus();
-  lastResult.style.backgroundColor = 'white';
-  randomNumber = Math.floor(Math.random() * 100) + 1;
-}
+4. **Control de Intentos**
+   - Se implementó un contador de intentos que detiene el juego después de 10 intentos o al acertar el número.
+   - Se modificaron los mensajes de finalización del juego según el estado del juego (ganar o perder).
+   - **Código**:
+     ```javascript
+     if (guessCount === ATTEMPTS) {
+       lastResult.textContent = '!!!Pérdistes!!!';
+       lastResult.style.backgroundColor = 'red';
+       setGameOver();
+     }
+     ```
+
+5. **Reinicio del Juego**
+   - Se implementó la lógica para reiniciar el juego, eliminando los mensajes previos y reactivando los campos de entrada.
+   - Se creó un botón para reiniciar el juego y se le asignó una función que restablece todos los parámetros.
+   - **Código**:
+     ```javascript
+     resetButton.addEventListener('click', resetGame);
+     ```
+
+## Conclusión
+Los cambios realizados aseguran que el juego "Adivina tu Número" cumpla con todos los requisitos funcionales y no funcionales. Se han implementado las validaciones necesarias y se ha mejorado la experiencia del usuario mediante mensajes claros y un control efectivo del flujo del juego.
